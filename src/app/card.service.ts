@@ -17,8 +17,8 @@ export class CardService {
     return this.http.post<any[]>(this.apiUrl, data);
   }
 
-  createCard(tableData: any): Observable<any> {
-    const data = { func: "insert", data: { tableName: "flash_card", tableData: tableData } }
+  createCard(Data: any): Observable<any> {
+    const data = { func: "insert", data: { tableName: "flash_card", tableData: Data } }
     return this.http.post<any>(this.apiUrl, data)
   }
 
@@ -29,6 +29,11 @@ export class CardService {
 
   editCard(cardData: any, cardId: number): Observable<any> {
     const data = { func: "update", data: { tableName: "flash_card", tableData: cardData, id: cardId } }
+    return this.http.post<any>(this.apiUrl, data)
+  }
+
+  clearCards(): Observable<any> {
+    const data = { func: "clearAllFlashCards", data: "" }
     return this.http.post<any>(this.apiUrl, data)
   }
 }

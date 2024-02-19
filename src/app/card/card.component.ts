@@ -87,10 +87,7 @@ export class CardComponent {
   }
 
   onShow() {
-
-    setTimeout(() => {
-      this.data.show === 0 ? this.data.show = 1 : this.data.show = 0
-    }, 1000);
+    this.data.show == 0 ? this.data.show = 1 : this.data.show = 0
   }
 
 

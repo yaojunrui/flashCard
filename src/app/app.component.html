@@ -1,32 +1,34 @@
 <div class="container">
   <h1 class="is-size-3"> Flash Card</h1>
   <label for="" class="label">Question</label>
-  <input class="input is-link" type="text" placeholder="Question" (input)="onInputChange()"
-    [(ngModel)]="input_question">
+  <input class="input is-link" type="text" placeholder="Question" [(ngModel)]="input_question">
   <label for="" class="label">Answer</label>
   <input class="input is-link" type="text" placeholder="Answer" [(ngModel)]="input_answer">
 </div>
 
-<div class="buttonsss">
-  <button mat-raised-button color="primary" (click)="onSubmit()">{{button_name1}}</button>
+<div class="buttons">
+  <button class="button is-success is-light" (click)="onSubmit()">{{button_name1}}</button>
   <button class="button is-warning is-light" (click)="onClear()">{{button_name2}}</button>
+  <button class="button is-primary is-light" (click)="onClearAll()">Clear All Cards</button>
+
+  <div class="file is-primary">
+    <label class="file-label">
+      <input class="file-input" type="file" name="resume" (input)="onFileChange($event)">
+      <span class="file-cta">
+        <span class="file-icon">
+          <i class="fas fa-upload"></i>
+        </span>
+        <span class="file-label">
+          Upload an excel file
+        </span>
+      </span>
+    </label>
+  </div>
 </div>
+
+
 
 
 <div class="flashs">
   <app-card *ngFor="let card of flashCards" [data]="card" (deleteEmit)="onDelete($event)"></app-card>
-</div>
-
-<div class="file has-name is-right">
-  <label class="file-label">
-    <input class="file-input" type="file" name="resume" (change)="onFileChange($event)">
-    <span class="file-cta">
-      <span class="file-icon">
-        <i class="fas fa-upload"></i>
-      </span>
-      <span class="file-label">
-        Choose a file…
-      </span>
-    </span>
-  </label>
 </div>

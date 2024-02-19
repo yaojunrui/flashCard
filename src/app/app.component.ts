@@ -35,7 +35,6 @@ export class AppComponent {
 
   refreshCards() {
     this.cardservice.getAllCards().subscribe(res => {
-      console.log(res);
       this.flashCards = res
     })
   }
@@ -45,9 +44,7 @@ export class AppComponent {
   input_question: string = "";
   input_answer: string = "";
 
-  onInputChange() {
-    console.log(this.input_question)
-  }
+
 
   button_name1: string = "Submit"
   button_name2: string = "Clear"
@@ -56,19 +53,34 @@ export class AppComponent {
 
   onSubmit() {
     if (this.button_name1 === "Submit") {
-      const data = { question: this.input_question, answer: this.input_answer }
-      this.cardservice.createCard(data).subscribe(res => { this.flashCards.push(res[0]) })
+      const data = {
+        question: this.checkStr(this.input_question),
+        answer: this.checkStr(this.input_answer)
+      }
+      console.log(data.question)
+      this.cardservice.createCard(data).subscribe(res => {
+        console.log(res[0])
+        return this.flashCards.push(res[0])
+      })
     }
     else if (this.button_name1 === "Update") {
 
       const index = this.flashCards.findIndex(v => v.id === this.current_id)
-      this.flashCards[index].question = this.input_question
-      this.flashCards[index].answer = this.input_answer
+      this.flashCards[index].question = this.checkStr(this.input_question)
+      this.flashCards[index].answer = this.checkStr(this.input_answer)
       this.button_name1 = "Submit"
       this.button_name2 = "Clear"
 
-      const newCard: IFlash = { question: this.input_question, answer: this.input_answer }
-      this.cardservice.editCard(newCard, this.current_id).subscribe(res => { this.flashCards[index].question = newCard.question, this.flashCards[index].answer = newCard.answer })
+      const newCard: IFlash = {
+        question: this.checkStr(this.input_question),
+        answer: this.checkStr(this.input_answer)
+      }
+      this.cardservice.editCard(newCard, this.current_id).subscribe(res => {
+        res.question = this.checkStr(res.question)
+        res.answer = this.checkStr(res.answer)
+        return this.flashCards[index].question = res.question,
+          this.flashCards[index].answer = res.answer
+      })
     }
   }
 
@@ -90,7 +102,7 @@ export class AppComponent {
     const index = this.flashCards.findIndex(v => v.id === id)
     this.cardservice.deleteCard(id).subscribe(res => {
       this.flashCards.splice(index, 1);
-      toastr.info('You deleted a card successfully')
+      toastr.info('You successfully deleted a card')
     })
   }
 
@@ -106,7 +118,6 @@ export class AppComponent {
     this.excelservice.getExcelData(file).subscribe(res => {
       from(res).pipe(
         concatMap(item => {
-          console.log(item)
           item.question = this.checkStr(item.question);
           item.answer = this.checkStr(item.answer);
           return this.cardservice.createCard(item)
@@ -117,6 +128,7 @@ export class AppComponent {
           console.log(re[0]); // This will add each card to the beginning of the array as they are created
         },
         complete: () => {
+          toastr.info('You successfully uploaded a file!');
           console.log('All cards have been created successfully');
         },
         error: (error) => {
@@ -128,8 +140,6 @@ export class AppComponent {
 
   checkStr(str: string) {
     if (str.indexOf("'") > -1) {
-      console.log(str)
-      console.log(str.replaceAll("'", "\\'"))
       return str.replaceAll("'", "\\'")
     }
     else if (str.indexOf('"') > -1) {
@@ -138,4 +148,13 @@ export class AppComponent {
     else
       return str
   }
+
+  onClearAll() {
+    this.cardservice.clearCards().subscribe(res => {
+      toastr.info('You cleared all cards!');
+      this.flashCards = [];
+    })
+  }
 }
+
+
