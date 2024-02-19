@@ -25,7 +25,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.css",
+              "node_modules/bulma/css/bulma.css",
+              "./node_modules/toastr/build/toastr.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -65,7 +68,8 @@
               "buildTarget": "flashCard:build:production"
             },
             "development": {
-              "buildTarget": "flashCard:build:development"
+              "buildTarget": "flashCard:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -89,6 +93,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -96,5 +101,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "a8f33f02-ddb6-46b4-8e16-f7997b7832d4"
   }
 }

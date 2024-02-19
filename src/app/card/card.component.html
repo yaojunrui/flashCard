@@ -1,0 +1,35 @@
+<div class="card-root">
+    <div class="question" (click)="onShow()" [style.background]="questionColor">
+        <div class="question-content" [style.color]="textColor">{{data.question}}</div>
+        <span class="icon drop-list-icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+    </div>
+
+    <div *ngIf="data.show" class="answer">
+        <div class="answer-content">{{data.answer}}</div>
+        <p class="buttons">
+            <button class="button is-success" (click)="onRight()">
+                <span class="icon">
+                    <i class="fas fa-check"></i>
+                </span>
+            </button>
+            <button class="button is-danger is-outlined" (click)="onWrong()">
+                <span class="icon">
+                    <i class="fas fa-times"></i>
+                </span>
+            </button>
+            <button class="button" (click)="onEdit()">
+                <span class="icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </span>
+            </button>
+
+            <button class="button is-primary" (click)="onDelete()">
+                <span class="icon">
+                    <i class="fas fa-trash"></i>
+                </span>
+            </button>
+        </p>
+    </div>
+</div>

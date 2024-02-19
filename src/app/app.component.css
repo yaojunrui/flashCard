@@ -1,0 +1,15 @@
+/* Submit按钮样式 */
+.buttonsss {
+    margin-left: 10px;
+}
+
+.container {
+    margin: 10px;
+    width: 300px;
+}
+
+.flashs {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+}

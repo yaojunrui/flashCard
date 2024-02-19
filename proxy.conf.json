@@ -1,0 +1,6 @@
+{
+    "/flashcard": {
+        "target": "http://localhost",
+        "secure": false
+    }
+}
