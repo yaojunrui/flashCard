@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, input } from '@angular/core';
 import { RouterOutlet } from '@angular/router'
 import { CardComponent, IFlash } from './card/card.component';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { MessageService } from './message.service';
 import * as toastr from 'toastr';
 import { read, writeFileXLSX } from "xlsx";
 import { ExcelService } from './excel.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -19,17 +20,32 @@ import { ExcelService } from './excel.service';
   imports: [RouterOutlet, CardComponent, CommonModule, FormsModule, MatButtonModule]
 })
 export class AppComponent {
+
   title = 'flashCard';
 
+  input_question: string = "";
+  input_answer: string = "";
+
+  button_name1: string = "Submit"
+  button_name2: string = "Clear"
+
+  private current_id: any = 0
+
   constructor(private cardservice: CardService, private messageservice: MessageService,
-    private excelservice: ExcelService) { }
+    private excelservice: ExcelService, private cdr: ChangeDetectorRef) { }
   flashCards: IFlash[] = [];
+
+  @ViewChild("input") new_question
 
   ngOnInit() {
     this.refreshCards();
 
     this.messageservice.isEditCard$.subscribe(res => {
       this.onEdit(res)
+    })
+
+    this.messageservice.isCorrect$.subscribe(res => {
+      this.refreshCards()
     })
   }
 
@@ -38,18 +54,6 @@ export class AppComponent {
       this.flashCards = res
     })
   }
-
-
-
-  input_question: string = "";
-  input_answer: string = "";
-
-
-
-  button_name1: string = "Submit"
-  button_name2: string = "Clear"
-
-  private current_id: any = 0
 
   onSubmit() {
     if (this.button_name1 === "Submit") {
@@ -150,10 +154,40 @@ export class AppComponent {
   }
 
   onClearAll() {
-    this.cardservice.clearCards().subscribe(res => {
-      toastr.info('You cleared all cards!');
-      this.flashCards = [];
+    Swal.fire({
+      title: "Do you want to clear all cards?",
+      showCancelButton: true,
+      confirmButtonText: "Yes! Clear All",
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        toastr.info('You cleared all cards!');
+        this.cardservice.clearCards().subscribe(res => {
+          this.flashCards = [];
+        })
+      }
+    });
+
+  }
+
+  getCorrectCards() {
+    let i = 0
+    this.flashCards.forEach(v => {
+      if (v.remember == 1)
+        i++
     })
+    return i
+  }
+
+  getWrongCards() {
+    let i = 0
+    this.flashCards.forEach(v => {
+      if (v.remember == 0)
+        i++
+    })
+    console.log(this.flashCards)
+    return i
+
   }
 }
 

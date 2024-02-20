@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { randomInt } from 'crypto';
 import { CardService } from '../card.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +24,8 @@ export interface IFlash {
 
 export class CardComponent {
 
-  constructor(private cardservice: CardService, private messageservice: MessageService) { }
+  constructor(private cardservice: CardService, private messageservice: MessageService,
+    private cdr: ChangeDetectorRef) { }
   private _data: IFlash = { question: "Question1", answer: "Answer1", show: 0, id: 1 };
   public get data(): IFlash {
     return this._data;
@@ -32,8 +33,8 @@ export class CardComponent {
   @Input()
   public set data(value: IFlash) {
     this._data = value;
-
     this.setColor(value.remember)
+    console.log(this._data);
   }
 
   private setColor(remember: any) {
@@ -51,13 +52,20 @@ export class CardComponent {
   }
   @Output() rightEmit = new EventEmitter();
   @Output() deleteEmit = new EventEmitter();
-  questionColor: string = "white";
+  private _questionColor: string = "white";
+  public get questionColor(): string {
+    return this._questionColor;
+  }
+  public set questionColor(value: string) {
+    this._questionColor = value;
+  }
   textColor: string = "black";
 
   onRight() {
     this.cardservice.editCard({ remember: 1 }, this.data.id)
       .subscribe(res => {
-        this.questionColor = "green", this.textColor = "white"
+        this.questionColor = "green"; this.textColor = "white";
+        this.messageservice.isCorrect()
       })
 
   }
@@ -65,7 +73,8 @@ export class CardComponent {
   onWrong() {
     this.cardservice.editCard({ remember: 0 }, this.data.id)
       .subscribe(res => {
-        this.questionColor = "red", this.textColor = "white"
+        this.questionColor = "red"; this.textColor = "white";
+        this.messageservice.isCorrect()
       })
   }
   onEdit() {
@@ -89,9 +98,5 @@ export class CardComponent {
   onShow() {
     this.data.show == 0 ? this.data.show = 1 : this.data.show = 0
   }
-
-
-
-
 }
 

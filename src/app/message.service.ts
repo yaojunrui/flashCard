@@ -13,4 +13,11 @@ export class MessageService {
   isEditCard(isShow: any) {
     this._isEditCard.next(isShow);
   }
+
+  private _isCorrect = new Subject<any>();
+  isCorrect$ = this._isCorrect.asObservable();
+  isCorrect() {
+    this._isCorrect.next(null);
+  }
+
 }
